@@ -1,4 +1,8 @@
-/* game.js */
+//* game.js
+    仮素材はSVGデータURIを使ってるので、そのまますぐに動きます。
+    後で images/xxx.png を作って差し替えてください（下に手順あり）。
+    ★スマホで音を鳴らすための「タップしてスタート」処理を追加済★
+*/
 
 (() => {
   // --- 設定（あとでいじれる） ---
@@ -8,6 +12,7 @@
   const SCORE_PENALTY = 5;
 
   // --- 要素 ---
+  const gameRoot = document.getElementById('game-root'); // ★ゲーム全体をタップ対象に
   const bg = document.getElementById('bg');
   const character = document.getElementById('character');
   const effect = document.getElementById('effect');
@@ -20,6 +25,7 @@
   const restartBtn = document.getElementById('btn-restart');
 
   // --- 仮SVG素材（デフォルト） ---
+  // → 後で images/your.png に差し替える方法は下に記載。
   const placeholderSVG = (w, h, bgColor, text) => {
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}'>
       <rect width='100%' height='100%' fill='${bgColor}'/>
@@ -52,6 +58,7 @@
 
 // AudioContextを定義
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let soundsLoaded = false; // ★音源のロード状態フラグ
 
   // --- 音源（ファイル読み込み設定） ---
 const SOUND_PATHS = {
@@ -77,6 +84,7 @@ async function loadSound(name, url) {
 // 読み込まれたバッファを再生する汎用関数
 function playSound(name) {
     if (audioCtx.state === 'suspended') audioCtx.resume(); 
+
     const buffer = soundBuffers[name];
     if (!buffer) return;
     const source = audioCtx.createBufferSource();
@@ -89,6 +97,7 @@ function playSound(name) {
 async function loadAllSounds() {
     const loadPromises = Object.entries(SOUND_PATHS).map(([name, path]) => loadSound(name, path));
     await Promise.all(loadPromises);
+    soundsLoaded = true; // ★ロード完了
 }
 
 // --- 新しい音源再生関数（既存の関数名を流用） ---
@@ -106,12 +115,35 @@ function seRumble() { playSound('rumble'); }
   let locked = true;
   let currentIsFart = true; // 真＝おなら, 偽＝下痢
 
+// ★ここからスタート画面処理★
+function showStartScreen() {
+    centerText.textContent = '画面をタップしてスタート';
+    character.src = imgs.pain;
+    btnFart.style.display = 'none';
+    btnToilet.style.display = 'none';
+    restartBtn.style.display = 'none';
+    
+    // 最初のタップを待つ
+    gameRoot.addEventListener('click', startSequence, { once: true });
+}
+
+async function startSequence() {
+    centerText.textContent = '音源を読み込み中...';
+    // 音源の読み込みとオーディオコンテキストの有効化
+    await loadAllSounds(); 
+    
+    centerText.textContent = 'ぎゅルルル……';
+    btnFart.style.display = 'inline-block';
+    btnToilet.style.display = 'inline-block';
+    initUI();
+}
+// ★ここまでスタート画面処理★
+
   // 初期表示
   function initUI(){
     bg.src = backgrounds[Math.floor(Math.random()*backgrounds.length)];
     character.src = imgs.pain;
     effect.classList.add('hidden');
-    centerText.textContent = 'ぎゅルルル……';
     scoreEl.textContent = score;
     highEl.textContent = highscore;
     msgEl.textContent = '';
@@ -251,7 +283,8 @@ function seRumble() { playSound('rumble'); }
   });
 
   // 初期化
-  loadAllSounds().then(initUI);
+  // ★音源のロードを削除し、showStartScreenを呼び出す★
+  showStartScreen(); 
 
   // --- 画像差し替え用の便利関数（デバッグ用） ---
   window.PoopGame = {
@@ -266,7 +299,8 @@ function seRumble() { playSound('rumble'); }
     },
     setBackgrounds: (arr) => {
       // arr: ['images/bg1.png', ...]
-      for (let i=0;i<arr.length && i<backgrounds.length;i++){
+      // ★修正点：仮素材の10個すべてを上書きできるように変更
+      for (let i=0;i<arr.length && i<10;i++){ 
         backgrounds[i] = arr[i];
       }
       bg.src = backgrounds[Math.floor(Math.random()*backgrounds.length)];
@@ -274,5 +308,32 @@ function seRumble() { playSound('rumble'); }
     // 音を外部ファイルに切り替えるためのフラグ（未実装の簡易フック）
     useExternalSounds: false
   };
+
+  // --- ここから追記：画像ファイルを固定名で差し替え設定 ---
+  // ユーザーが images/ フォルダに指定された名前のファイルを置くと、自動的に読み込まれます。
+  
+  // キャラクター・ポップアップ画像の設定
+  window.PoopGame.setImagePaths({
+    pain: 'images/pain.png',
+    strain: 'images/strain.png',
+    toilet: 'images/toilet.png',
+    safePop: 'images/pop_safe.png', 
+    outPop: 'images/pop_out.png'
+  });
+
+  // 背景画像の設定（10枚すべて設定）
+  window.PoopGame.setBackgrounds([
+    'images/bg_1.png', 
+    'images/bg_2.png', 
+    'images/bg_3.png',
+    'images/bg_4.png',
+    'images/bg_5.png',
+    'images/bg_6.png',
+    'images/bg_7.png',
+    'images/bg_8.png',
+    'images/bg_9.png',
+    'images/bg_10.png'
+  ]);
+  // --- 追記ここまで ---
 
 })();
