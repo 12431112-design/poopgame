@@ -1,0 +1,37 @@
+/* 横解像度想定：1280x720（PC向け） */
+:root{
+  --width:1280px;
+  --height:720px;
+  --stageW:1000px;
+  --stageH:560px;
+  --bg-color:#f6f6f6;
+  --accent:#7b3;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;background:linear-gradient(#eee,#ddd)}
+#game-root{width:var(--width);height:var(--height);margin:20px auto;border:6px solid #333;background:#fff;display:flex;flex-direction:column;align-items:center}
+header{padding:10px 20px;background:#222;color:#fff;width:100%}
+header h1{margin:0;font-size:20px}
+main{display:flex;flex-direction:column;align-items:center;padding:16px;gap:12px;width:100%}
+#stage{width:var(--stageW);height:var(--stageH);position:relative;overflow:hidden;border:3px solid #666;background:#cfc}
+#stage img#bg{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;filter:contrast(0.95) saturate(0.9)}
+#scene-overlay{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
+#character-wrap{position:relative;width:420px;height:420px;display:flex;align-items:center;justify-content:center}
+#character{max-width:100%;max-height:100%;transform:translateY(0);transition:transform 250ms ease}
+#effect{position:absolute;left:50%;top:10%;width:220px;transform:translateX(-50%);pointer-events:none;transition:opacity .2s}
+.hidden{display:none}
+#center-text{font-size:28px;font-weight:700;color:#222;margin-top:6px;text-align:center}
+#controls{display:flex;gap:20px}
+.action-btn{padding:14px 28px;font-size:20px;border-radius:10px;border:2px solid #222;background:#fff;cursor:pointer;box-shadow:0 6px 0 #aaa;transition:transform .08s}
+.action-btn:active{transform:translateY(4px);box-shadow:none}
+#statusbar{width:var(--stageW);display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-top:2px dashed #ccc}
+#statusbar div{font-weight:700}
+#msg{font-size:18px;color:#b33}
+.small{padding:6px 10px;font-size:14px}
+.effect-safe{animation:pop 700ms ease forwards}
+.effect-out{animation:burst 700ms ease forwards}
+@keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes burst{0%{transform:scale(.8);opacity:0}50%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
+#stage .brown-explode{position:absolute;left:10%;top:60%;width:80%;height:40%;background:rgba(120,60,10,0.12);border-radius:20px;filter:blur(6px);opacity:0;transition:opacity .4s}
+.visible{opacity:1}
+footer{width:100%;padding:8px 12px;text-align:right;color:#555;font-size:12px}

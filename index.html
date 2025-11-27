@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>おならかな？下痢かな？</title>
+  <meta name="viewport" content="width=1280, height=720, user-scalable=no">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-root">
+    <header>
+      <h1>おならかな？下痢かな？</h1>
+    </header>
+
+    <main>
+      <div id="stage">
+        <img id="bg" alt="background">
+        <div id="scene-overlay">
+          <div id="character-wrap">
+            <img id="character" alt="character">
+            <img id="effect" alt="effect" class="hidden">
+          </div>
+
+          <div id="center-text">ぎゅルルル……</div>
+        </div>
+      </div>
+
+      <div id="controls">
+        <button id="btn-fart" class="action-btn">踏ん張る</button>
+        <button id="btn-toilet" class="action-btn">トイレに行く</button>
+      </div>
+
+      <div id="statusbar">
+        <div>スコア：<span id="score">0</span></div>
+        <div id="highest">最高：<span id="highscore">0</span></div>
+        <div id="msg"></div>
+        <button id="btn-restart" class="small" style="display:none">もう一度</button>
+      </div>
+    </main>
+
+    <footer>
+      <small>仮素材：SVGプレースホルダ / 音：ファイル読み込み</small>
+    </footer>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
