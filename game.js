@@ -1,7 +1,7 @@
 //* game.js
     仮素材はSVGデータURIを使ってるので、そのまますぐに動きます。
     後で images/xxx.png を作って差し替えてください（下に手順あり）。
-    ★スマホで音を鳴らすための「タップしてスタート」処理を追加済★
+    ★スマホで音を鳴らすための「タップしてスタート」処理と、背景10枚分に対応済★
 */
 
 (() => {
@@ -58,7 +58,7 @@
 
 // AudioContextを定義
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-let soundsLoaded = false; // ★音源のロード状態フラグ
+let soundsLoaded = false; 
 
   // --- 音源（ファイル読み込み設定） ---
 const SOUND_PATHS = {
@@ -97,7 +97,7 @@ function playSound(name) {
 async function loadAllSounds() {
     const loadPromises = Object.entries(SOUND_PATHS).map(([name, path]) => loadSound(name, path));
     await Promise.all(loadPromises);
-    soundsLoaded = true; // ★ロード完了
+    soundsLoaded = true; 
 }
 
 // --- 新しい音源再生関数（既存の関数名を流用） ---
