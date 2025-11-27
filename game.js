@@ -337,3 +337,4 @@ async function startSequence() {
   // --- 追記ここまで ---
 
 })();
+　
